@@ -49,6 +49,11 @@
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
                 {% endfor %}
+                <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-info btn-block"  type="submit"
+                           value="{% if 1 %}Start Exam{% else %}Hello{% endif %} ">
+                </form>
             </div>
 
             <!-- Task: show questions and choices -->
