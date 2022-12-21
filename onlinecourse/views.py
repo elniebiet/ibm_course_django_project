@@ -128,11 +128,12 @@ def submit(request, course_id):
     for selected_choice in selected_choices:
         selected_choice = get_object_or_404(Choice, id=selected_choice)
         submission_obj.choices.add(selected_choice)
-        submission_obj.save()
-
-    print("submission id ")
-    print(submission_obj.id)
     
+    submission_obj.save()
+    print("submission saved: ID = ")
+    print(submission_obj.id)
+    print(submission_obj)
+    print(submission_obj.choices)
     return HttpResponseRedirect(reverse(viewname='onlinecourse:exam_result', args=(course.id,submission_obj.id,)))
 
 
@@ -157,6 +158,21 @@ def show_exam_result(request, course_id, submission_id):
     print("course id and submission id")
     print(course_id)
     print(submission_id)
+    course = get_object_or_404(Course, pk=course_id)
+    temp = get_object_or_404(Submission, pk=submission_id)
+    print("temp")
+    ch = temp.choices
+    submission = Submission.objects.get(id=submission_id)
+    choiceids = submission.choices.all()
+    total_grade = 0
+    for ch in choiceids:
+        print("is correct: ")
+        print(ch.is_correct)
+        if True == ch.is_correct:
+            total_grade += 1
+    print(choiceids)
+    print(Submission.objects.all)
+
     return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
 
 
