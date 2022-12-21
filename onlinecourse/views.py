@@ -119,25 +119,33 @@ def submit(request, course_id):
     user = request.user
     course = get_object_or_404(Course, pk=course_id)
     enrollment = Enrollment.objects.get(user=user, course=course_id)
-    Submission.objects.create(enrollment=enrollment)
-    newsubmission =  Submission.objects.order_by('-enrollment_id')
-    print(request.POST)   
-    print("submission id: ") 
-    print(newsubmission)
+    selected_choices = extract_answers(request)
+    print("selected answers: ") 
+    print(selected_choices)
     context = {}
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:exam_result', args=(course.id, newsubmission.id)))
+    
+    submission_obj = Submission.objects.create(enrollment=enrollment)
+    for selected_choice in selected_choices:
+        selected_choice = get_object_or_404(Choice, id=selected_choice)
+        submission_obj.choices.add(selected_choice)
+        submission_obj.save()
+
+    print("submission id ")
+    print(submission_obj.id)
+    
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:exam_result', args=(submission_obj.id,)))
     #return render(request, 'onlinecourse/user_registration_bootstrap.html', context)
 
 
 # <HINT> A example method to collect the selected choices from the exam form from the request object
-#def extract_answers(request):
-#    submitted_anwsers = []
-#    for key in request.POST:
-#        if key.startswith('choice'):
-#            value = request.POST[key]
-#            choice_id = int(value)
-#            submitted_anwsers.append(choice_id)
-#    return submitted_anwsers
+def extract_answers(request):
+   submitted_anwsers = []
+   for key in request.POST:
+       if key.startswith('choice'):
+           value = request.POST[key]
+           choice_id = int(value)
+           submitted_anwsers.append(choice_id)
+   return submitted_anwsers
 
 
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
