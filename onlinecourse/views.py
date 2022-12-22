@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login, logout, authenticate
 import logging
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 # Create your views here.
@@ -176,25 +177,27 @@ def show_exam_result(request, course_id, submission_id):
         choices = Choice.objects.filter(question=question.id)
         for choice in choices:
             if choice.is_correct: #choice is correct, check its in the list of submitted choices
-                choice_found_in_submission = False
+                choice_found_in_submission = "False"
                 for ch in choiceids:
                     if ch.id == choice.id:
-                        choice_found_in_submission = True
-                if False == choice_found_in_submission:
+                        choice_found_in_submission = "True"
+                if "False" == choice_found_in_submission:
                     passed_question = False
                     # break
                 choice_id_with_status[choice.id] = choice_found_in_submission
             else: #choice is not correct, check its not submitted
-                choice_found_in_submission = False
+                choice_found_in_submission = "False"
                 for ch in choiceids:
                     if ch.id == choice.id:
-                        choice_found_in_submission = True
-                if True == choice_found_in_submission:
+                        choice_found_in_submission = "True"
+                if "True" == choice_found_in_submission:
                     passed_question = False
                     # break
-                res = True 
-                if choice_found_in_submission:
-                    res = False
+                res = "True" 
+                if choice_found_in_submission == "True":
+                    res = "False"
+                else:
+                    res = "Neutral"
                 choice_id_with_status[choice.id] = res
         if passed_question:
             question.grade = 1
@@ -222,5 +225,4 @@ def show_exam_result(request, course_id, submission_id):
 
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
-
 

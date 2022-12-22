@@ -60,6 +60,19 @@
                         {% for choice in question.choice_set.all %}
                             <div class="form-check">
                                 <label class="form-check-label">
+                                    {% if choice_id_with_status %}
+                                        {% for key, value in choice_id_with_status.items %}
+                                            {% if key == choice.id %}
+                                                {% if value == "True" %}
+                                                    Correct
+                                                {% elif value == "Neutral" %}
+                                                    Neutral
+                                                {% else %}
+                                                    False
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                     {{ choice.choice_text }}
                                 </label>
                             </div>
