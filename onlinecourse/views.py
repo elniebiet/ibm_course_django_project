@@ -88,10 +88,6 @@ class CourseListView(generic.ListView):
 class CourseDetailView(generic.DetailView):
     model = Course
     template_name = 'onlinecourse/course_detail_bootstrap.html'
-    # def get_queryset(self):
-    #     questions = Question.objects.order_by('lesson_id')
-    #     print(questions)
-    #     return questions
 
 
 def enroll(request, course_id):
@@ -214,8 +210,6 @@ def show_exam_result(request, course_id, submission_id):
         total_score += 1
 
 
-    # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
-    # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
     context['course'] = course
     context['selected_ids'] = choiceids
     print(choice_id_with_status)
