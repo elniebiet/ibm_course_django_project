@@ -175,6 +175,39 @@ def show_exam_result(request, course_id, submission_id):
     print(choiceids)
     print(Submission.objects.all)
 
+    questions = Question.objects.filter(course=course_id)
+    for question in questions:
+        passed_question = True
+        choices = Choice.objects.filter(question=question.id)
+        for choice in choices:
+            if choice.is_correct: #choice is correct, check its in the list of submitted choices
+                choice_found_in_submission = False
+                for ch in choiceids:
+                    if ch.id == choice.id:
+                        choice_found_in_submission = True
+                if False == choice_found_in_submission:
+                    passed_question = False
+                    break
+            else: #choice is not correct, check its not submitted
+                choice_found_in_submission = False
+                for ch in choiceids:
+                    if ch.id == choice.id:
+                        choice_found_in_submission = True
+                if True == choice_found_in_submission:
+                    passed_question = False
+                    break
+        if passed_question:
+            question.grade = 1
+            print("passed question - ")
+            print(question.id)
+        else:
+            question.grade = 0
+            print("failed question - ")
+            print(question.id)
+
+
+
+
 
     # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
     # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
