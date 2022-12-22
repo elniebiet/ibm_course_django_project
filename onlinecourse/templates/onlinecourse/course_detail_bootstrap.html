@@ -59,25 +59,7 @@
             </div>
 
             <!-- Task: show questions and choices -->
-            <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here
-            https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
-            
-            <!-- A collapse example here: -->
-            <!-- <div id="exam" class="collapse">
-                Click to expand elements within the collapse div
-            </div> -->
-            
-            <!-- <HINT> If user is authenticated, show course exam with a list of question -->
             {% if user.is_authenticated %}
-                <!-- <HINT> Each example will have many questions -->
-
-                <!-- <HINT> Each question will have many choices -->
-
-
-                <!-- <HINT> Create a form to collect the selected choices for all questions -->
-                <!-- <HINT> For each question choice, you may create a checkbox input like
-                <input type="check" name="choice_{{choice.id}}" id="{{choice.id}}" ...>
-                -->
                 <!-- A choice submission form example -->
                 <div class="collapse" id="collapseSection">
                     <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
