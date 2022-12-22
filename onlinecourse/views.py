@@ -156,6 +156,7 @@ def extract_answers(request):
         # Calculate the total score
 def show_exam_result(request, course_id, submission_id):
     context = {}
+    choice_id_with_status = {}
     print("course id and submission id")
     print(course_id)
     print(submission_id)
@@ -187,7 +188,8 @@ def show_exam_result(request, course_id, submission_id):
                         choice_found_in_submission = True
                 if False == choice_found_in_submission:
                     passed_question = False
-                    break
+                    # break
+                choice_id_with_status[choice.id] = choice_found_in_submission
             else: #choice is not correct, check its not submitted
                 choice_found_in_submission = False
                 for ch in choiceids:
@@ -195,7 +197,11 @@ def show_exam_result(request, course_id, submission_id):
                         choice_found_in_submission = True
                 if True == choice_found_in_submission:
                     passed_question = False
-                    break
+                    # break
+                res = True 
+                if choice_found_in_submission:
+                    res = False
+                choice_id_with_status[choice.id] = res
         if passed_question:
             question.grade = 1
             print("passed question - ")
@@ -213,6 +219,7 @@ def show_exam_result(request, course_id, submission_id):
     # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
     context['course'] = course
     context['selected_ids'] = choiceids
+    print(choice_id_with_status)
 
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
