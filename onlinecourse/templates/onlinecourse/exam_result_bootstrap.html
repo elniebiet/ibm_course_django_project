@@ -39,10 +39,12 @@
     {% if grade > 80 %}
         <div class="alert alert-success">
         <!--HINT Display passed info -->
+            <b>Congratulations, {{user.first_name}}!</b> You have passed the exam and completed the course with score {{grade}} / 100
         </div>
     {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
+            <b>Failed. </b>Sorry, {{user.first_name}}! You have failed exam with score {{grade}} / 100
         </div>
         <!-- removed line here -->
     {% endif %}
@@ -59,22 +61,21 @@
                     <!-- ... for each choice in the question ... -->
                         {% for choice in question.choice_set.all %}
                             <div class="form-check">
-                                <label class="form-check-label">
                                     {% if choice_id_with_status %}
                                         {% for key, value in choice_id_with_status.items %}
                                             {% if key == choice.id %}
                                                 {% if value == "True" %}
-                                                    Correct
-                                                {% elif value == "Neutral" %}
-                                                    Neutral
+                                                <label class="text-success">Correct answer: {{ choice.choice_text }}</label>
+                                                {% elif value == "CorrectNotSelected" %}
+                                                <label class="text-dark">{{ choice.choice_text }}</label>
+                                                {% elif value == "WrongNotSelected" %}
+                                                <label class="text-warning">Not selected: {{ choice.choice_text }}</label>
                                                 {% else %}
-                                                    False
+                                                <label class="text-danger">Wrong answer: {{ choice.choice_text }}</label>
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                     {% endif %}
-                                    {{ choice.choice_text }}
-                                </label>
                             </div>
                         {% endfor %}
                     </div>

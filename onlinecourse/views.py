@@ -158,7 +158,6 @@ def extract_answers(request):
 def show_exam_result(request, course_id, submission_id):
     context = {}
     choice_id_with_status = {}
-    score = {}
     print("course id and submission id")
     print(course_id)
     print(submission_id)
@@ -181,10 +180,14 @@ def show_exam_result(request, course_id, submission_id):
                 for ch in choiceids:
                     if ch.id == choice.id:
                         choice_found_in_submission = "True"
+                res = "False"
                 if "False" == choice_found_in_submission:
                     passed_question = False
+                    res = "WrongNotSelected"
+                else:
+                    res = "True"
                     # break
-                choice_id_with_status[choice.id] = choice_found_in_submission
+                choice_id_with_status[choice.id] = res
             else: #choice is not correct, check its not submitted
                 choice_found_in_submission = "False"
                 for ch in choiceids:
@@ -197,7 +200,7 @@ def show_exam_result(request, course_id, submission_id):
                 if choice_found_in_submission == "True":
                     res = "False"
                 else:
-                    res = "Neutral"
+                    res = "CorrectNotSelected"
                 choice_id_with_status[choice.id] = res
         if passed_question:
             question.grade = 1
@@ -210,9 +213,6 @@ def show_exam_result(request, course_id, submission_id):
             print(question.id)
         total_score += 1
 
-    score['user_score'] = user_score
-    score['total_score'] = total_score
-
 
     # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
     # return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course_id,)))
@@ -220,8 +220,9 @@ def show_exam_result(request, course_id, submission_id):
     context['selected_ids'] = choiceids
     print(choice_id_with_status)
     context['choice_id_with_status'] = choice_id_with_status
-    context['score'] = score
-    print(score)
+    score_percent = int(user_score * 100 / total_score)
+    print(score_percent)
+    context['grade'] = score_percent
 
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
